@@ -1,23 +1,30 @@
 // build your `/api/tasks` router here
-const express = require('express');
-const router = express.Router()
-const Task = require('./model')
+const router = require("express").Router();
+const { checkTaskId, checkTaskPayload } = require("./middleware");
+const Tasks = require("./model");
 
-router.get('/', (req,res,next)=>{
-  Task.getTasks()
-    .then(tasks => {
-      if(!tasks){
-        res.status(200).json([])}
-      else{
-        res.status(200).json(tasks)
-      }
-    })
-    .catch(next)
-})
+router.get("/", async (req, res, next) => {
+  try {
+    const tasks = await Tasks.getTasks();
+    res.json(tasks);
+  } catch (err) {
+    next(err);
+  }
+});
 
-router.use('*', (req, res)=>{
-    res.json({api:'up'})
-})
+router.get("/:id", checkTaskId, (req, res) => {
+  res.json(req.task);
+});
+
+router.post("/", checkTaskPayload, async (req, res, next) => {
+  try {
+    const newTask = await Tasks.createTask(req.body);
+    res.status(201).json(newTask);
+  } catch (err) {
+    next(err);
+  }
+});
+
 
 // eslint-disable-next-line no-unused-vars
 router.use((err, req, res, next)=>{
