@@ -1,24 +1,38 @@
 // build your `/api/resources` router here
-const express = require('express');
-const router = express.Router()
-const Resource = require('./model')
+const router = require("express").Router();
+const {
+  checkResourceId,
+  checkResourcePayload,
+  checkResourceUnique,
+} = require("./middleware");
+const Resources = require("./model");
 
-router.get('/', (req,res,next)=>{
-    Resource.getResource()
-    .then(resources => {
-        if(!resources){
-          res.status(200).json([])}
-        else{
-          res.status(200).json(resources)
-        }
-    })
-    .catch(next)
-})
+router.get("/", async (req, res, next) => {
+  try {
+    const resources = await Resources.getResources();
+    res.json(resources);
+  } catch (err) {
+    next(err);
+  }
+});
 
-router.use('*', (req, res)=>{
-    res.json({api:'up'})
-})
+router.get("/:id", checkResourceId, (req, res) => {
+  res.json(req.resource);
+});
 
+router.post(
+  "/",
+  checkResourcePayload,
+  checkResourceUnique,
+  async (req, res, next) => {
+    try {
+      const newResource = await Resources.createResource(req.body);
+      res.status(201).json(newResource);
+    } catch (err) {
+      next(err);
+    }
+  }
+);
 // eslint-disable-next-line no-unused-vars
 router.use((err, req, res, next)=>{
     res.status(500).json({
