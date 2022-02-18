@@ -1,8 +1,12 @@
 // build your `Resource` model here
-function getResourceById(resource_id){
-    return Promise.resolve(`awesome Project with id ${resource_id}`)
+const db = require('../../data/dbConfig');
+
+
+async function getResource(){
+    const projectRows = await db('resources as r')
+    return projectRows;
 }
 
 module.exports = {
-    getResourceById
+    getResource
 };
