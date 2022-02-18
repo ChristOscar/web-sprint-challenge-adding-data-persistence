@@ -1,8 +1,11 @@
+const dbConfig = require("../../data/dbConfig");
+
 // build your `Task` model here
-function getTaskById(task_id){
-    return Promise.resolve(`awesome Project with id ${task_id}`)
+async function getTasks(){
+    const taskRows = await dbConfig('tasks as t')
+    return taskRows
 }
 
 module.exports = {
-    getTaskById
+    getTasks
 };
