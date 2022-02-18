@@ -124,4 +124,4 @@ Be prepared to demonstrate your understanding of this week's concepts by answeri
 
 4. What do we need in order to have a `many to many` relationship between two tables?
 
-- To order a `many to many` relationship, another table is required. This table will hold the arranged data so it will become a `one to many` relationship. 
+- To order a `many to many` relationship, another table is required. This table will hold the arranged data so it will become a `one to many` relationship
